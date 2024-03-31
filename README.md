@@ -1,4 +1,6 @@
-# COMP3005Final
+# COMP3005 Final Project
+
+# Database
 
 
 
