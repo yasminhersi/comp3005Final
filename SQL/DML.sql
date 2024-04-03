@@ -4,8 +4,8 @@ CREATE TABLE members (
     last_name VARCHAR(255) NOT NULL,
   	achieved_date DATE
   	weight NUMBER
-  	height 
-  	goal_weight	
+  	height NUMBER
+  	goal_weight NUMBER	
 );
 
 CREATE TABLE trainers (
