@@ -8,7 +8,7 @@ CREATE TABLE members (
     height INTEGER
 );
 CREATE TABLE trainers (
-    trainer_id SERIAL PRIMARY KEY,
+    trainers_id SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     available DATE
 );
@@ -19,7 +19,7 @@ CREATE TABLE staff (
 );
 
 CREATE TABLE group_classes (
-    classes_id SERIAL PRIMARY KEY,
+    group_classes_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     duration INTEGER,
     available DATE,
@@ -34,7 +34,7 @@ CREATE TABLE personal_classes (
      available DATE
 );
 CREATE TABLE equipments (
-    equipment_id SERIAL PRIMARY KEY,
+    equipments_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     counter INTEGER 
 );
