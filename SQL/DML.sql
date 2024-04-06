@@ -5,7 +5,9 @@ CREATE TABLE members (
     achieved_date DATE,
     curr_weight INTEGER,
     goal_weight INTEGER,
-    height INTEGER
+    height INTEGER,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 CREATE TABLE trainers (
     trainers_id SERIAL PRIMARY KEY,
