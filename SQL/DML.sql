@@ -18,13 +18,21 @@ CREATE TABLE staff (
     available DATE
 );
 
-CREATE TABLE classes (
+CREATE TABLE group_classes (
     classes_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     duration INTEGER,
-    available DATE	
-);
+    available DATE,
+    trainer_id INT,
+    FOREIGN KEY (trainer_id) REFERENCES Trainer(trainer_id),
 
+);
+CREATE TABLE personal_classes (
+     personal_classes_id SERIAL PRIMARY KEY,
+     name VARCHAR(255) NOT NULL,
+   	 duartion INTEGER,
+     available DATE
+);
 CREATE TABLE equipments (
     equipment_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -35,8 +43,4 @@ CREATE TABLE exercises (
     name VARCHAR(255) NOT NULL,
     number_sets INTEGER
 );
-CREATE TABLE staff (
-    staff_id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL,
-    available DATE	
-);
+
