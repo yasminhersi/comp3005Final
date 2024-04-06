@@ -17,3 +17,21 @@ def getAllMember():
     for member in members:
         print(member)
 getAllMembers()
+
+getAllMembers()
+
+def getMemberInfo():
+        
+        memberUser  = input("Enter member username: ")
+        memberPass = input("Enter member password: ")
+        cur.execute("SELECT * FROM members WHERE username = (%s) AND password = (%s) ;", 
+                    (memberUser, memberPass))
+
+        member = cur.fetchone()
+
+        if member:
+            print("Member found:", member)
+        else:
+            print("Member not found.")
+            
+getMemberbyInfo()
