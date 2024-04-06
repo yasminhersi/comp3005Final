@@ -18,8 +18,6 @@ def getAllMember():
         print(member)
 getAllMembers()
 
-getAllMembers()
-
 def getMemberInfo():
         
         memberUser  = input("Enter member username: ")
