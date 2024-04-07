@@ -4,7 +4,7 @@ CREATE TABLE members (
     last_name VARCHAR(255) NOT NULL,
     achieved_date DATE,
     curr_weight INTEGER,
-    goal_weight INTEGER,
+    fitness_goal VARCHAR(255) NOT NULL,
     height INTEGER,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
