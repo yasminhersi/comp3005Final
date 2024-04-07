@@ -28,8 +28,15 @@ def getMemberInfo():
         member = cur.fetchone()
 
         if member:
-            print("Member found:", member)
+            print("\nMember ID:", member[0])
+            print("\nHEALTH METRICS")
+            print("--------------------------------------------------------------------------------------------")
+            print("Name: ", member[1], " ", member[2])
+            print("Height: ", member[6], " cm")
+            print("Weight: ", member[4], " lbs")
+            print("Goal: ", member[5], " lbs")
+            print("Want to achieve this goal by: ", member[3])
         else:
             print("Member not found.")
             
-getMemberbyInfo()
+getMemberInfo()
