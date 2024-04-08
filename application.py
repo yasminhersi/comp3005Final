@@ -74,3 +74,52 @@ def register_member():
                    (member_id, first_name, last_name, achievement_date, weight, fitness_goal, height, username, password))
     
     print("You have been registered successfully!")
+
+def getAllPersonalClasses(): 
+    cur.execute("SELECT * FROM personal_classes")
+    personal_classes = cur.fetchall()
+    print("\nPersonal Classes\n")
+    for personal_class in personal_classes:
+        print(personal_class)
+        
+def getAllGroupClasses(): 
+    cur.execute("SELECT * FROM group_classes")
+    group_classes = cur.fetchall()
+    print("\nGroup Classes\n")
+    for group_class in group_classes:
+        print(group_class)
+
+def registerClass():      
+        type_class_pick = int(input("\nPick 1 for personal classes and 2 for group classes ")) 
+        
+        if type_class_pick == 1:
+             getAllPersonalClasses()
+             userInput = input("\nEnter Personal Class ID you'd like to register in: ")
+        
+             cur.execute("SELECT * FROM personal_classes WHERE group_classes_id = (%s) ;", 
+                    (userInput))
+
+             personal_class = cur.fetchone()
+            
+             if personal_class:
+                print("\Personal Class ID found:", personal_class)
+             else:
+                print("Personal class ID not found.")
+
+        elif type_class_pick == 2 :
+            getAllGroupClasses()
+            userInput2 = input("\nEnter Group Class ID you'd like to register in: ")
+
+            cur.execute("SELECT * FROM group_classes WHERE group_classes_id = (%s) ;", 
+                            (userInput2))
+
+            group_class = cur.fetchone()
+            
+            if group_class:
+                print("\nGroup Class ID found:", group_class)
+                print("You've successfully registered for the class")
+            else:
+                print("Group class ID not found.")
+        else:
+            print("ERROR: Enter a correct option")
+registerClass()
