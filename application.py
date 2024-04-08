@@ -97,7 +97,7 @@ def registerClass():
              getAllPersonalClasses()
              userInput = input("\nEnter Personal Class ID you'd like to register in: ")
         
-             cur.execute("SELECT * FROM personal_classes WHERE group_classes_id = (%s) ;", 
+             cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s) ;", 
                     (userInput))
 
              personal_class = cur.fetchone()
