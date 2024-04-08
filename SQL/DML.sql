@@ -34,7 +34,8 @@ CREATE TABLE personal_classes (
      personal_classes_id SERIAL PRIMARY KEY,
      name VARCHAR(255) NOT NULL,
    	 duartion INTEGER,
-     available DATE
+     available DATE,
+     FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
 );
 CREATE TABLE equipments (
     equipments_id SERIAL PRIMARY KEY,
