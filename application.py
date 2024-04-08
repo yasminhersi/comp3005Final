@@ -20,7 +20,7 @@ getAllMembers()
 
 def getMemberInfo():
         
-        memberUser  = input("Enter member username: ")
+        memberUser  = input("\nEnter member username: ")
         memberPass = input("Enter member password: ")
         cur.execute("SELECT * FROM members WHERE username = (%s) AND password = (%s) ;", 
                     (memberUser, memberPass))
@@ -103,7 +103,7 @@ def registerClass():
              personal_class = cur.fetchone()
             
              if personal_class:
-                print("\Personal Class ID found:", personal_class)
+                print("\nPersonal Class ID found:", personal_class)
              else:
                 print("Personal class ID not found.")
 
