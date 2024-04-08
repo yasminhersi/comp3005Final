@@ -89,6 +89,7 @@ def getAllGroupClasses():
     for group_class in group_classes:
         print(group_class)
 
+#this function is for members to pick a group or personal class, then register in one that interests them. Classes are displayed
 def registerClass():      
         type_class_pick = int(input("\nPick 1 for personal classes and 2 for group classes ")) 
         
