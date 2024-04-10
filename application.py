@@ -40,6 +40,23 @@ def getMemberInfo():
         else:
             print("Member not found.")
 
+#getting this to work with the other function with proper sequence
+def update_member_info():
+    user_input = input("Would you like to update your information? (Y | N): ")
+
+    while True:
+        if user_input == "Y":
+            print("Please enter the following information to update your profile:")
+            fitness_goal = int(input("New Fitness Goal: "))
+            weight = int(input("New Weight (lbs): "))
+            height = int(input("New Height (cm): "))
+            achieved_date = input("New date to achieve by: ")
+            cur.execute("UPDATE members SET goal_weight = %s, curr_weight = %s, height = %s, achieved_date = %s",
+                    (fitness_goal, weight, height, achieved_date))
+            break
+        else:
+            break
+
 def username_exists(username):
     cur.execute("SELECT COUNT(*) FROM members WHERE username = %s", (username,))
     count = cur.fetchone()[0]
