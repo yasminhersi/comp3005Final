@@ -35,12 +35,12 @@ CREATE TABLE group_classes (
 CREATE TABLE personal_classes (
      personal_classes_id SERIAL PRIMARY KEY,
      name VARCHAR(255) NOT NULL,
-   	 duration INTEGER,
-     available DATE,
-	 trainer_id INTEGER,
-	 member_id INTEGER,
-	 FOREIGN KEY (member_id) REFERENCES members(member_id),
-	 FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
+     duration INTEGER,
+     available TIMESTAMP,
+     trainer_id INTEGER,
+     member_id INTEGER,
+     FOREIGN KEY (member_id) REFERENCES members(member_id),
+     FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
 );
 CREATE TABLE equipments (
     equipments_id SERIAL PRIMARY KEY,
