@@ -13,12 +13,12 @@ CREATE TABLE members (
 CREATE TABLE trainers (
     trainers_id SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
-    available DATE
+    available TIMESTAMP
 );
 CREATE TABLE staff (
     staff_id SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
-    available DATE
+    available TIMESTAMP
 );
 
 CREATE TABLE group_classes (
@@ -27,16 +27,16 @@ CREATE TABLE group_classes (
     duration INTEGER,
     time TIMESTAMP,
     trainer_id INT,
-	members_count INT,
-	max_members INT,
+    members_count INT,
+    max_members INT,
     FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
 );
 
 CREATE TABLE personal_classes (
      personal_classes_id SERIAL PRIMARY KEY,
      name VARCHAR(255) NOT NULL,
-   	 duartion INTEGER,
-     available DATE,
+     duration INTEGER,
+     time TIMESTAMP,
      FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
 );
 CREATE TABLE equipments (
