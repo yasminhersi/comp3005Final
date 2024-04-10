@@ -25,11 +25,13 @@ CREATE TABLE group_classes (
     group_classes_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     duration INTEGER,
-    available DATE,
+    time TIMESTAMP,
     trainer_id INT,
-    FOREIGN KEY (trainer_id) REFERENCES Trainer(trainer_id),
-
+	members_count INT,
+	max_members INT,
+    FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
 );
+
 CREATE TABLE personal_classes (
      personal_classes_id SERIAL PRIMARY KEY,
      name VARCHAR(255) NOT NULL,
