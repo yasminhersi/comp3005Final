@@ -18,15 +18,16 @@ def getAllMember():
         print(member)
 getAllMembers()
 
+def login():
+    memberUser = input("Enter member username: ")
+    memberPass = input("Enter member password: ")
+    cur.execute("SELECT * FROM members WHERE username = (%s) AND password = (%s) ;", 
+        (memberUser, memberPass))
+    member = cur.fetchone()
+    return member
+
 def getMemberInfo():
-        
-        memberUser  = input("\nEnter member username: ")
-        memberPass = input("Enter member password: ")
-        cur.execute("SELECT * FROM members WHERE username = (%s) AND password = (%s) ;", 
-                    (memberUser, memberPass))
-
-        member = cur.fetchone()
-
+        member = login()
         if member:
             print("\nMember ID:", member[0])
             print("\nHEALTH METRICS")
@@ -38,8 +39,6 @@ def getMemberInfo():
             print("Want to achieve this goal by: ", member[3])
         else:
             print("Member not found.")
-            
-getMemberInfo()
 
 def username_exists(username):
     cur.execute("SELECT COUNT(*) FROM members WHERE username = %s", (username,))
