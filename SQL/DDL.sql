@@ -8,7 +8,7 @@ VALUES
 (1, 'HIIT', 30, '2024-04-12', NULL),
 (2, 'Cardio', 45, '2024-04-13', NULL);
 
-INSERT INTO group_classes (group_classes_id, name, duration, available, trainer_id)
+INSERT INTO group_classes (group_classes_id, name, duration, time, trainer_id, members_count, max_members)
 VALUES 
-(1, 'Pilates', 30, '2024, 4, 10', NULL),
-(2, 'Spinning', 45, '2024, 4, 11', NULL);
+(1, 'Pilates', 30, '2024-04-10 16:00:00', NULL, NULL, 4),
+(2, 'Spinning', 45, '2024-04-10 19:00:00', NULL, NULL, 3);
