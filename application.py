@@ -106,37 +106,60 @@ def getAllGroupClasses():
         print(group_class)
 
 #this function is for members to pick a group or personal class, then register in one that interests them. Classes are displayed
-def registerClass():      
+def registerClass():
+        members_count = 0
         type_class_pick = int(input("\nPick 1 for personal classes and 2 for group classes ")) 
-        
+        #if member wants personal classes, their member ID will be populated to the member_id value in personal_classes table
         if type_class_pick == 1:
              getAllPersonalClasses()
-             userInput = input("\nEnter Personal Class ID you'd like to register in: ")
+             personal_class_id = input("\nEnter Personal Class ID you'd like to register in: ")
         
              cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s) ;", 
-                    (userInput))
+                    (personal_class_id))
 
              personal_class = cur.fetchone()
             
              if personal_class:
-                print("\nPersonal Class ID found:", personal_class)
+                print("\nPersonal Class ID found:", personal_class_id)
+                member_by_id=getMemberbyID()
+                
+                cur.execute("UPDATE personal_classes SET member_id = (%s) WHERE personal_classes_id = (%s);", 
+                               (member_by_id, personal_class_id))
+                cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s) ;", 
+                               (personal_class_id))
+                print("You've successfully regitered for the class")
+                print("Member ID: ",member_by_id," registered for personal class: ", personal_class)
+                #maybe add availability for member and make it equal to this class' time + its duration
              else:
-                print("Personal class ID not found.")
-
+                print("Personal class ID not found :(")
+#if member wants a group class, check if this class' capacity has reached before adding member, increment participants counter for this class
         elif type_class_pick == 2 :
             getAllGroupClasses()
-            userInput2 = input("\nEnter Group Class ID you'd like to register in: ")
+            group_class_id = input("\nEnter Group Class ID you'd like to register in: ")
 
             cur.execute("SELECT * FROM group_classes WHERE group_classes_id = (%s) ;", 
-                            (userInput2))
+                            (group_class_id))
 
             group_class = cur.fetchone()
             
             if group_class:
-                print("\nGroup Class ID found:", group_class)
-                print("You've successfully registered for the class")
+                print("\nGroup Class ID found:", group_class_id)
+                #increase member count in group class
+                members_count += 1
+                
+                cur.execute("UPDATE group_classes SET members_count = (%s) WHERE group_classes_id = (%s);", 
+                                  (members_count, group_class_id))
+                cur.execute("SELECT max_members FROM group_classes WHERE group_classes_id = (%s);",
+                                   (group_class_id,))
+                #find max members value for current group class id and check if capacity has reached before registering
+                max_members=cur.fetchone()[0]
+                print("max members:", max_members)
+                print("member count:", members_count)
+                if members_count<max_members :
+                    print("You've successfully registered for the class")
+                else:
+                    print("Sorry class is full :(")
             else:
                 print("Group class ID not found.")
         else:
-            print("ERROR: Enter a correct option")
-registerClass()
+            print("Enter a correct option")
