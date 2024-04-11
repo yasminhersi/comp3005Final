@@ -124,11 +124,11 @@ def getAllGroupClasses():
 def registerClass():
         members_count = 0
         type_class_pick = int(input("\nPick 1 for personal classes and 2 for group classes ")) 
-        #if member wants personal classes, their member ID will be populated to the member_id value in personal_classes table
+        
         if type_class_pick == 1:
              getAllPersonalClasses()
-             personal_class_id = input("\nEnter Personal Class ID you'd like to register in: ")
-        
+             personal_class_id = input("\nEnter Personal Class ID you'd like to register in: ")     
+
              cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s) ;", 
                     (personal_class_id))
 
@@ -137,21 +137,34 @@ def registerClass():
              if personal_class:
                 print("\nPersonal Class ID found:", personal_class_id)
                 member_by_id=getMemberbyID()
+                #if class exists, choose a trainer
+                getAllTrainers()
+                trainer_id = input("\nPick a trainer for your personal class: ")
+                cur.execute("SELECT trainer_id FROM trainers WHERE trainer_id = %s",  (trainer_id,))
+                #set the trainer's availiblity to this personal class session
+                cur.execute("SELECT available FROM trainers WHERE trainer_id = %s", (trainer_id,))
+                available=cur.fetchone()
+                cur.execute("UPDATE personal_classes SET available = (%s) WHERE personal_classes_id = (%s);", 
+                               (available, personal_class_id))
                 
-                cur.execute("UPDATE personal_classes SET member_id = (%s) WHERE personal_classes_id = (%s);", 
-                               (member_by_id, personal_class_id))
+                # Set member ID and trainer ID for the personal class
+                cur.execute("UPDATE personal_classes SET member_id = %s, trainer_id = %s WHERE personal_classes_id = %s;",
+                            (member_by_id, trainer_id, personal_class_id))
+                
                 cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s) ;", 
                                (personal_class_id))
-                print("You've successfully regitered for the class")
-                print("Member ID: ",member_by_id," registered for personal class: ", personal_class)
-                #maybe add availability for member and make it equal to this class' time + its duration
+                print("You've successfully registered for the class")
+                
+                print("Member ID: ",member_by_id,"registered with trainer ID:", trainer_id)
+                getAllPersonalClasses()
+               
              else:
-                print("Personal class ID not found :(")
-#if member wants a group class, check if this class' capacity has reached before adding member, increment participants counter for this class
+                print("Personal class ID not found.")
+
         elif type_class_pick == 2 :
             getAllGroupClasses()
             group_class_id = input("\nEnter Group Class ID you'd like to register in: ")
-
+        
             cur.execute("SELECT * FROM group_classes WHERE group_classes_id = (%s) ;", 
                             (group_class_id))
 
@@ -178,3 +191,4 @@ def registerClass():
                 print("Group class ID not found.")
         else:
             print("Enter a correct option")
+
