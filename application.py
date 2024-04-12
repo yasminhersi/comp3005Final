@@ -192,3 +192,23 @@ def registerClass():
         else:
             print("Enter a correct option")
 
+def lookup_member():
+    print("Search the member that you want to lookup: ")
+    first_name = input(print("Enter the first name of the member: "))
+    last_name = input(print("Enter the last name of the member: "))
+    
+    cur.execute("SELECT * FROM members WHERE first_name = %s AND last_name = %s", (first_name, last_name))
+    searched_member = cur.fetchone()
+
+    if searched_member:
+        print("Member found:")
+        print("Member ID: ", searched_member[0])
+        print("First Name: ", searched_member[1])
+        print("Last Name: ", searched_member[2])
+        print("Height: ", searched_member[6])
+        print("Fitness goal: ", searched_member[5])
+        print ("Weight: ", searched_member[4])
+        print("Date to achieve: ", searched_member[3])
+    else:
+        print("Member not found.")
+
