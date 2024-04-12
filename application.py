@@ -212,3 +212,34 @@ def lookup_member():
     else:
         print("Member not found.")
 
+def monitor_equipment_maintenance():
+    print("EQUIPMENT MAINTENANCE MONITORING")
+    print("---------------------------------")
+    print("1. View Equipment Maintenance Status")
+    print("2. Update Equipment Maintenance Status")
+    choice = input("Enter your choice (1 or 2): ")
+
+    if choice == "1":
+        # View equipment maintenance status
+        cur.execute("SELECT * FROM equipments")
+        equipments = cur.fetchall()
+        if equipments:
+            print("Equipment Maintenance Status:")
+            for equipment in equipments:
+                print("Equipment ID:", equipment[0])
+                print("Equipment Name:", equipment[1])
+                print("Counter:", equipment[2])
+                print("--------------------------")
+        else:
+            print("No equipment records found.")
+    elif choice == "2":
+        # Update equipment maintenance status
+        equipment_id = input("Enter Equipment ID: ")
+        maintenance_counter = int(input("Enter Maintenance Counter: "))
+        cur.execute("UPDATE equipments SET counter = %s WHERE equipments_id = %s",
+                       (maintenance_counter, equipment_id))
+        conn.commit()
+        print("Equipment maintenance counter updated successfully.")
+    else:
+        print("Invalid choice. Please enter 1 or 2.")
+
