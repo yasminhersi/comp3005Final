@@ -2,7 +2,7 @@ import psycopg2
 import string
 
 # Connect to your postgres DB
-conn = psycopg2.connect("dbname=students user=postgres password=student host=localhost port=5432")
+conn = psycopg2.connect("dbname=FinalProject user=postgres password=student host=localhost port=5432")
 
 # Open a cursor to perform database operations
 cur = conn.cursor()
@@ -16,7 +16,7 @@ def getAllMember():
     #print each row of students
     for member in members:
         print(member)
-getAllMembers()
+getAllMember()
 
 def getMemberbyID():     
         memberUser  = input("\nEnter member username: ")
