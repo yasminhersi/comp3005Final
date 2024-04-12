@@ -53,3 +53,4 @@ CREATE TABLE exercises (
     number_sets INTEGER
 );
 
+#create a room bookings table
