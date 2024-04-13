@@ -66,3 +66,8 @@ CREATE TABLE health_statistics (
     FOREIGN KEY (member_id) REFERENCES members(member_id)
 );
 #create a room bookings table
+CREATE TABLE room (
+    room_id SERIAL PRIMARY KEY,
+    status VARCHAR(255) NOT NULL,
+    room_number INTEGER,
+);
