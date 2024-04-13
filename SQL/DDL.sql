@@ -24,3 +24,8 @@ INSERT INTO health_statistics (health_id, member_id, weight, height, BMI, restin
 VALUES
 (1, 1, 150, '5 1', 20, 90),
 (2, 2, 130, '5 7', 22, 70);
+
+INSERT INTO room (room_id, status, room_number)
+VALUES
+(1, 'FREE', 1),
+(2, 'FREE', 2);
