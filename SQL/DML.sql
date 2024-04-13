@@ -29,6 +29,7 @@ CREATE TABLE group_classes (
     trainer_id INT,
     members_count INT,
     max_members INT,
+    price INT,
     FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
 );
 
@@ -39,6 +40,7 @@ CREATE TABLE personal_classes (
      available TIMESTAMP,
      trainer_id INTEGER,
      member_id INTEGER,
+     price INTEGER,
      FOREIGN KEY (member_id) REFERENCES members(member_id),
      FOREIGN KEY (trainer_id) REFERENCES trainers(trainer_id)
 );
@@ -51,19 +53,25 @@ CREATE TABLE exercises (
     exercises_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     sets INTEGER,
-	description TEXT,
-	muscle_group VARCHAR(255) NOT NULL,
-	difficulty_level INTEGER,
-	minutes INTEGER
+    description TEXT,
+    muscle_group VARCHAR(255) NOT NULL,
+    difficulty_level INTEGER,
+    minutes INTEGER
 );
 CREATE TABLE health_statistics (
     health_id SERIAL PRIMARY KEY,
     member_id INTEGER NOT NULL,
     weight INTEGER,
-	height VARCHAR(255) NOT NULL,
-	BMI INTEGER,
-	resting_heart INTEGER,
+    height VARCHAR(255) NOT NULL,
+    BMI INTEGER,
+    resting_heart INTEGER,
     FOREIGN KEY (member_id) REFERENCES members(member_id)
+);
+CREATE TABLE staff (
+    staff_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 #create a room bookings table
 CREATE TABLE room (
