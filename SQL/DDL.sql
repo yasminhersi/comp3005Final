@@ -29,3 +29,8 @@ INSERT INTO room (room_id, status, room_number)
 VALUES
 (1, 'FREE', 1),
 (2, 'FREE', 2);
+
+INSERT INTO equipments (equipment_id, name, status)
+VALUES 
+(1, 'dumbbells', 'under maintenance'),
+(2, 'treadmill', 'free');
