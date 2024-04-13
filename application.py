@@ -192,6 +192,63 @@ def registerClass():
         else:
             print("Enter a correct option")
 
+def getExercisesByID(exercise_id):
+     cur.execute("SELECT * FROM exercises WHERE exercises_id = (%s);",
+                    (exercise_id,))
+     exercises = cur.fetchall()
+     for exercise in exercises:
+        print(exercise)
+
+     print("\nExecercise ID:", exercise[0])
+     print("----------------------------------")
+     print("Name: ", exercise[1])
+     print("Number of Sets: ", exercise[2])
+     print("Description: ", exercise[3])
+     print("Muscle Group: ", exercise[4])
+     print("Difficulty Level: ", exercise[5])
+     print("Duration: ", exercise[6], ' minutes')
+
+def getAllExercises():
+     cur.execute("SELECT * FROM exercises")
+     exercises = cur.fetchall()
+     print("Exercise Routines:")
+     for exercise in exercises:
+         print(exercise)
+
+def getHealthbyID(member):
+     cur.execute("SELECT * FROM health_statistics WHERE member_id = (%s);",
+                    (member,))
+     health_stats = cur.fetchall()
+     for health_stat in health_stats:
+        print(health_stat)
+
+     print("\nHealth Statistics:", health_stat[0])
+     print("----------------------------------")
+     print("Member ID: ", health_stat[1])
+     print("Weight: ", health_stat[2], ' lbs')
+     print("Height: ", health_stat[3], 'feet')
+     print("BMI: ", health_stat[4])
+     print("Resting Heart rate: ", health_stat[5], ' BPM')
+
+def dashboard():                
+     member=getMemberbyID()
+     print("\n ----------- Member ------------")
+     print("\n|  1. View Member Information   |")
+     print("\n|  2. Update Member Information |")
+     print("\n|  3. Exercise Routines         |")
+     print("\n|  4. Fitness Achievements      |")
+     user_input=int(input("\nPick an option from the Dashboard: "))
+     if user_input==1:
+        getMemberInfo()
+     elif user_input==2:
+        update_member_info()
+     elif user_input==3:
+        getAllExercises()
+        user_input2=int(input("Select a workout for details"))
+        getExercisesByID(user_input2)
+     elif user_input==4:
+        getHealthbyID(member)
+
 def lookup_member():
     print("Search the member that you want to lookup: ")
     first_name = input(print("Enter the first name of the member: "))
