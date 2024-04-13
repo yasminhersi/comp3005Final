@@ -388,3 +388,6 @@ def room_booking_management():
     else:
         print("Invalid choice. Please enter 1, 2, 3, or 4.")
 
+#-------------------------------------------------------------------------------------------------------------------
+#Payment stuff
+
