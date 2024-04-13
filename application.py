@@ -346,3 +346,45 @@ def monitor_equipment_maintenance():
     else:
         print("Invalid choice. Please enter 1 or 2.")
 
+def room_booking_management():
+    print("ROOM BOOKING MANAGEMENT")
+    print("-----------------------")
+    print("1. View Room Bookings")
+    print("2. Add Room Booking")
+    print("3. Update Room Booking")
+    print("4. Delete Room Booking")
+    choice = input("Enter your choice (1, 2, 3, or 4): ")
+
+    if choice == "1":
+        # View room bookings
+        cursor.execute("SELECT * FROM room")
+        rooms = cursor.fetchall()
+        if rooms:
+            print("Rooms:")
+            for room in rooms:
+                print("Room ID:", room[0])
+                print("Status:", room[1])
+                print("Room Number:", room[2])
+                print("--------------------------")
+        else:
+            print("No rooms found.")
+    elif choice == "2":
+        # Add room booking
+        status = input("Enter Room Status: ")
+        room_number = int(input("Enter Room Number: "))
+        cursor.execute("INSERT INTO room (status, room_number) VALUES (%s, %s)",
+                       (status, room_number))
+        conn.commit()
+        print("Room added successfully.")
+    elif choice == "3":
+        # Update room booking
+        room_id = input("Enter Room ID to update: ")
+        status = input("Enter New Room Status: ")
+        room_number = int(input("Enter New Room Number: "))
+        cursor.execute("UPDATE room SET status = %s, room_number = %s WHERE room_id = %s",
+                       (status, room_number, room_id))
+        conn.commit()
+        print("Room updated successfully.")
+    else:
+        print("Invalid choice. Please enter 1, 2, 3, or 4.")
+
