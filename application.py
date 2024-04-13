@@ -144,20 +144,11 @@ def registerClass():
                     (personal_class_id))
 
              personal_class = cur.fetchone()
-            
+             #check if trainer is available
              if personal_class:
                 print("\nPersonal Class ID found:", personal_class_id)
                 member_by_id=getMemberbyID()
-                #if class exists, choose a trainer
-                getAllTrainers()
-                trainer_id = input("\nPick a trainer for your personal class: ")
-                cur.execute("SELECT trainer_id FROM trainers WHERE trainer_id = %s",  (trainer_id,))
-                #set the trainer's availiblity to this personal class session
-                cur.execute("SELECT available FROM trainers WHERE trainer_id = %s", (trainer_id,))
-                available=cur.fetchone()
-                cur.execute("UPDATE personal_classes SET available = (%s) WHERE personal_classes_id = (%s);", 
-                               (available, personal_class_id))
-                
+                generate_invoice(member_by_id, )
                 # Set member ID and trainer ID for the personal class
                 cur.execute("UPDATE personal_classes SET member_id = %s, trainer_id = %s WHERE personal_classes_id = %s;",
                             (member_by_id, trainer_id, personal_class_id))
@@ -202,7 +193,7 @@ def registerClass():
                 print("Group class ID not found.")
         else:
             print("Enter a correct option")
-
+            
 #Trainer pics which class they want to train  
 def scheduleTrainer():
   getAllTrainers()
