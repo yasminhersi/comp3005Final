@@ -1,7 +1,8 @@
-INSERT INTO members (member_id, first_name, last_name, achieved_date, curr_weight, fitness_goal, height, username, password)
+INSERT INTO members (member_id, first_name, last_name, achieved_date, fitness_goal,  curr_weight, height, username, password)
 VALUES 
-(1, 'John', 'Doe', '2024-05-01', 150, 170, 'to loose 10 lbs of fat', 'yasmin', '123'),
-(2, 'Smith', 'jane', '2024-08-01', 120, 150, 'to gain 10 lbs of muscle', 'fatima', '123');
+(1, 'John', 'Doe', '2024-05-01',  'to loose 10 lbs of fat', 150, 170, 'yasmin', '123'),
+(2, 'Smith', 'jane', '2024-08-01', 'to gain 10 lbs of muscle', 120, 150, 'fatima', '123');
+
 
 INSERT INTO personal_classes (personal_classes_id, name, duration, available, trainer_id, member_id)
 VALUES 
