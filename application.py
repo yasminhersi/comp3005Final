@@ -119,7 +119,18 @@ def getAllGroupClasses():
     print("\nGroup Classes\n")
     for group_class in group_classes:
         print(group_class)
+        
+def getAllTrainers(): 
+    cur.execute("SELECT * FROM trainers")
+    trainers = cur.fetchall()
+    print("\nTrainers\n")
+    for trainer in trainers:
+        print(trainer)
 
+def getTrainerByID(trainer_id): 
+    cur.execute("SELECT * FROM trainers WHERE trainer_id = %s", (trainer_id,))
+    trainer = cur.fetchall()
+    return trainer
 #this function is for members to pick a group or personal class, then register in one that interests them. Classes are displayed
 def registerClass():
         members_count = 0
@@ -191,6 +202,41 @@ def registerClass():
                 print("Group class ID not found.")
         else:
             print("Enter a correct option")
+
+#Trainer pics which class they want to train  
+def scheduleTrainer():
+  getAllTrainers()
+  user_input=int(input("Which Trainer ID are you: "))
+  trainer=getTrainerByID(user_input) 
+  
+  user_input2=int(input("Would you like to train a personal (1) or group class (2)"))
+  if user_input2==1:
+    getAllPersonalClasses()
+    user_input3=int(input("Pick a class to teach"))
+    
+    #set the trainer's availiblity to this personal class session
+    cur.execute("SELECT available FROM trainers WHERE trainer_id = %s", (user_input,))
+    available=cur.fetchone()
+    cur.execute("UPDATE personal_classes SET available = (%s) WHERE personal_classes_id = (%s);", 
+              (available, user_input3))
+  
+  elif user_input2==2:
+     getAllGroupClasses()
+     user_input4=int(input("Pick a class to teach: "))
+    
+     #set the trainer's availiblity to this personal class session
+     cur.execute("SELECT available FROM trainers WHERE trainer_id = %s", (user_input,))
+     available=cur.fetchone()
+     cur.execute("UPDATE group_classes SET time = (%s) WHERE group_classes_id = (%s);", 
+              (available, user_input4))
+     
+     cur.execute("SELECT name FROM group_classes WHERE group_classes_id = %s", (user_input4,))
+     groupClass=cur.fetchall()
+     cur.execute("SELECT first_name FROM trainers WHERE trainer_id = %s", (user_input,))
+     trainer_name=cur.fetchall()
+      
+     print("Congrats ", trainer_name, "! You're teaching class: ", groupClass)
+     
 
 def getExercisesByID(exercise_id):
      cur.execute("SELECT * FROM exercises WHERE exercises_id = (%s);",
