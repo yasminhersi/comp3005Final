@@ -1,7 +1,7 @@
 # COMP3005 Final Project
 
 # Directory:
-  SQL:
+  SQL
     - DDL files 
     - DML files
   Application.py
