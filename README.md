@@ -17,3 +17,4 @@
 https://docs.google.com/document/d/14aCRUCvRosONTv2y2lcq-Tm3FAhExwwfeeKkfyyg8_k/edit?usp=sharing
 
 # Link to video: 
+https://www.youtube.com/watch?v=Kdq_xdcX28Y&ab_channel=YasminHersi
