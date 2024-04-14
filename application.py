@@ -21,17 +21,17 @@ def getAllMembers():
 def getMemberbyID():     
         memberUser  = input("\nEnter member username: ")
         memberPass = input("Enter member password: ")
-        cur.execute("SELECT * FROM members WHERE username = (%s) AND password = (%s) ;", 
+        cur.execute("SELECT member_id FROM members WHERE username = (%s) AND password = (%s) ;", 
                     (memberUser, memberPass))
 
-        member = cur.fetchone()
-        member_id = member[0]
+        member_id = cur.fetchone()
         
-        if member:
-            print("Member found:", member)
+        if member_id:
+            print("Member ID found:", member_id)
             return member_id
         else:
             print("Member not found.")
+            exit(1)
         
 def login():
     memberUser = input("Enter member username: ")
@@ -46,7 +46,10 @@ def login():
         print("Member not found.")  
         exit(1)
 
-def getMemberInfo(member):
+def getMemberInfo(member_id):
+        cur.execute("SELECT * FROM members WHERE member_id = (%s) ;", 
+        (member_id,))
+        member = cur.fetchone()
         if member:
             print("\nMember ID:", member[0])
             print("\nHEALTH METRICS")
@@ -70,12 +73,14 @@ def update_member_info():
             weight = int(input("New Weight (lbs): "))
             height = int(input("New Height (cm): "))
             achieved_date = input("New date to achieve by: ")
-            cur.execute("UPDATE members SET goal_weight = %s, curr_weight = %s, height = %s, achieved_date = %s",
+            cur.execute("UPDATE members SET fitness_goal = %s, curr_weight = %s, height = %s, achieved_date = %s",
                     (fitness_goal, weight, height, achieved_date))
+            print("\nPersonal information has been updated!")
+            
             break
         else:
             break
-#update_member_info()
+
 def username_exists(username):
     cur.execute("SELECT COUNT(*) FROM members WHERE username = %s", (username,))
     count = cur.fetchone()[0]
@@ -95,7 +100,7 @@ def register_member():
     last_name = input("Enter your last name: ")
     weight = int(input("Weight (lbs): "))
     height = int(input("Height (cm): "))
-    fitness_goal = int(input("Fitness Goal: "))
+    fitness_goal = input("Fitness Goal: ")
     achievement_date = input("Please insert the date you would like to achieve your fitness goal by (year-month-day): ")
 
     cur.execute("SELECT MAX(member_id) FROM members")
@@ -105,9 +110,9 @@ def register_member():
     else:
         member_id = max_id + 1
 
-    cur.execute("INSERT INTO members (member_id, first_name, last_name, achieved_date, curr_weight, goal_weight, height, username, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                   (member_id, first_name, last_name, achievement_date, weight, fitness_goal, height, username, password))
-    
+    cur.execute("INSERT INTO members (member_id, first_name, last_name, achieved_date, fitness_goal, curr_weight, height, username, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                   (member_id, first_name, last_name, achievement_date, fitness_goal, weight, height, username, password))
+    getAllMembers()
     print("You have been registered successfully!")
 
 def getAllPersonalClasses(): 
@@ -152,10 +157,10 @@ def process_payment_member(invoice_id, payment_amount):
     print("Payment of $",  payment_amount, " processed successfully.")
 
 #this function is for members to pick a group or personal class, then register in one that interests them. Classes are displayed
-def registerClass():
+def registerClass(member_by_id):
         members_count = 0
         type_class_pick = int(input("\nPick 1 for personal classes and 2 for group classes ")) 
-        member_by_id=getMemberbyID()
+        
         if type_class_pick == 1:
              getAllPersonalClasses()
              personal_class_id = input("\nEnter Personal Class ID you'd like to register in: ")     
@@ -167,7 +172,6 @@ def registerClass():
              #check if trainer is available
              if personal_class:
                 print("\nPersonal Class ID found:", personal_class_id)
-                
 
                 cur.execute("SELECT price FROM personal_classes WHERE personal_classes_id = (%s) ;", 
                     (personal_class_id))
@@ -180,46 +184,22 @@ def registerClass():
                                     (member_by_id,))
                     invoice_id=cur.fetchone()
                     process_payment_member(invoice_id, amount_due)
+                    cur.execute("UPDATE personal_classes SET member_id= (%s) WHERE personal_classes_id = (%s);", 
+                                    (member_by_id, personal_class_id))
+                    print("Registered!")
                 else:
                     print("Payment cancelled")
                     return
-                trainer_id=int(input("Enter Trainer ID: "))
-                # Set member ID and trainer ID for the personal class
-                cur.execute("UPDATE personal_classes SET member_id = %s, trainer_id = %s WHERE personal_classes_id = %s;",
-                            (member_by_id, trainer_id, personal_class_id))
-                
-                cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s) ;", 
-                               (personal_class_id))
-                print("You've successfully registered for the class")
-                
-                print("Member ID: ",member_by_id,"registered with trainer ID:", trainer_id)
-                
-               
+                     
              else:
                 print("Personal class ID not found.")
 
         elif type_class_pick == 2 :
             getAllGroupClasses()
             group_class_id = input("\nEnter Group Class ID you'd like to register in: ")
-            ##
-            cur.execute("SELECT price FROM group_classes WHERE group_classes_id = (%s) ;", 
-                    (group_class_id))
-            amount_due=cur.fetchone()
-            generate_invoice(member_by_id, amount_due)
-                
-            paymentPromp=input("Would you like to proceed with payment? (Y OR N): ")
-            if(paymentPromp=='Y'):
-                cur.execute("SELECT invoice_id FROM invoice WHERE member_id = (%s) ;", 
-                                (member_by_id,))
-                invoice_id=cur.fetchone()
-                process_payment_member(invoice_id, amount_due)
-            else:
-                print("Payment cancelled")
-                return
-            ##
+            
             cur.execute("SELECT * FROM group_classes WHERE group_classes_id = (%s) ;", 
                             (group_class_id))
-
             group_class = cur.fetchone()
             
             if group_class:
@@ -227,6 +207,20 @@ def registerClass():
                 #increase member count in group class
                 members_count += 1
                 
+                cur.execute("SELECT price FROM group_classes WHERE group_classes_id = (%s) ;", 
+                (group_class_id))
+                amount_due=cur.fetchone()
+                generate_invoice(member_by_id, amount_due)
+                
+                paymentPromp=input("Would you like to proceed with payment? (Y OR N): ")
+                if(paymentPromp=='Y'):
+                    cur.execute("SELECT invoice_id FROM invoice WHERE member_id = (%s) ;", 
+                                (member_by_id,))
+                    invoice_id=cur.fetchone()
+                    process_payment_member(invoice_id, amount_due)
+                else:
+                    print("Payment cancelled")
+                    return
                 cur.execute("UPDATE group_classes SET members_count = (%s) WHERE group_classes_id = (%s);", 
                                   (members_count, group_class_id))
                 cur.execute("SELECT max_members FROM group_classes WHERE group_classes_id = (%s);",
@@ -236,6 +230,8 @@ def registerClass():
                 print("max members:", max_members)
                 print("member count:", members_count)
                 if members_count<max_members :
+                    cur.execute("UPDATE group_classes SET member_id= (%s) WHERE group_classes_id = (%s);", 
+                                    (member_by_id, group_class_id))
                     print("You've successfully registered for this class")
                 else:
                     print("Sorry class is full :(")
@@ -243,7 +239,7 @@ def registerClass():
                 print("Group class ID not found.")
         else:
             print("Enter a correct option")
-#registerClass()
+
 def lookup_member():
     print("Search the member that you want to lookup: ")
     first_name = input("Enter the first name of the member: ")
@@ -265,10 +261,9 @@ def lookup_member():
         print("Member not found.")
 
 def scheduleTrainer():
-  
   getAllTrainers()
   user_input=int(input("Which Trainer ID are you: "))
-  trainer=getTrainerByID(user_input) 
+  
   #lookup member
   pick=input("Would you like to look up a member? (Y OR N)")
   if pick == "Y":
@@ -296,15 +291,7 @@ def scheduleTrainer():
      cur.execute("UPDATE group_classes SET time = (%s) WHERE group_classes_id = (%s);", 
               (available, user_input4))
      
-     cur.execute("SELECT name FROM group_classes WHERE group_classes_id = %s", (user_input4,))
-     groupClass=cur.fetchall()
-     cur.execute("SELECT first_name FROM trainers WHERE trainer_id = %s", (user_input,))
-     trainer_name=cur.fetchall()
-     
-  print("Congrats ", trainer_name, "! You're teaching class: ", groupClass)
-     
-
-scheduleTrainer()
+  print("Congrats! You're teaching class: ")
 
 def getExercisesByID(exercise_id):
      cur.execute("SELECT * FROM exercises WHERE exercises_id = (%s);",
@@ -339,10 +326,62 @@ def getHealthbyID(member):
      print("\nHealth Statistics:", health_stat[0])
      print("----------------------------------")
      print("Member ID: ", health_stat[1])
-     print("Weight: ", health_stat[2], ' lbs')
-     print("Height: ", health_stat[3], 'feet')
-     print("BMI: ", health_stat[4])
-     print("Resting Heart rate: ", health_stat[5], ' BPM')
+     print("BMI: ", health_stat[2])
+     print("Resting Heart rate: ", health_stat[3], ' BPM')
+def deleteClass(member_id):
+    user_in=int(input("Would you like to delete a personal (1) or group class (2)?\n"))
+    if user_in==1:
+        cur.execute("SELECT * FROM personal_classes WHERE member_id = (%s);", 
+                    (member_id))
+        personalClass=cur.fetchall()
+        cur.execute("DELETE FROM personal_classes WHERE member_id = (%s);", 
+                    (member_id))
+        print("DONE! You deleted your personal class\n", personalClass)
+    elif user_in==2:
+        cur.execute("SELECT * FROM group_classes WHERE member_id = (%s);", 
+                    (member_id))
+        groupClass=cur.fetchall()
+        cur.execute("DELETE FROM group_classes WHERE member_id = (%s);", 
+                    (member_id))
+        print("DONE! You deleted your group class\n", groupClass)
+    else:
+        print("Enter a correct option")
+
+def rescheduleClass(member):
+    print("Must register for a class before rescheduling one")
+    registerClass(member)
+    user_input=int(input("Would you like to reschedule a personal (1) or group class (2)\n"))
+    if user_input==1:
+        getAllPersonalClasses()
+
+        class_id=int(input("Enter which class ID to update"))
+        cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s)", 
+                        (class_id,))
+        personal_class=cur.fetchall()
+        print("You picked class: ", personal_class)
+        #2024-04-10 16:00:00
+        newTime=input("Update schedule to what date and time (using format yyyy-mm-dd hh:mm:ss): ")
+        cur.execute("UPDATE personal_classes SET available = (%s) WHERE personal_classes_id = (%s);", 
+            (newTime, class_id))
+        cur.execute("SELECT * FROM personal_classes WHERE personal_classes_id = (%s)", 
+                        (class_id,))
+        personal_class=cur.fetchall()
+        print("Class updated: ", personal_class)
+    elif user_input==2:
+        class_id=int(input("Enter which class ID to update"))
+        cur.execute("SELECT * FROM group_classes WHERE group_classes_id = (%s)", 
+                        (class_id,))
+        group_class=cur.fetchall()
+        print("You picked class: ", group_class)
+        #2024-04-10 16:00:00
+        newTime=input("Update schedule to what(using format yyyy-mm-dd hh:mm:ss): ")
+        cur.execute("UPDATE group_classes SET time = (%s) WHERE group_classes_id = (%s);", 
+            (newTime, class_id))
+        cur.execute("SELECT * FROM group_classes WHERE group_classes_id = (%s)", 
+                        (class_id,))
+        group_class=cur.fetchall()
+        print("Class updated: ", group_class)
+
 
 def dashboard():                
      member=getMemberbyID()
@@ -351,19 +390,28 @@ def dashboard():
      print("\n|  2. Update Member Information |")
      print("\n|  3. Exercise Routines         |")
      print("\n|  4. Fitness Achievements      |")
+     print("\n|  5. Register For a Class      |")
+     print("\n|  6. Delete an Upcoming Class  |")
+     print("\n|  7. Reschedule a Class        |")
      user_input=int(input("\nPick an option from the Dashboard: "))
      if user_input==1:
-        getMemberInfo()
+        getMemberInfo(member)
      elif user_input==2:
         update_member_info()
+        getMemberInfo(member)
      elif user_input==3:
         getAllExercises()
         user_input2=int(input("Select a workout for details"))
         getExercisesByID(user_input2)
      elif user_input==4:
         getHealthbyID(member)
+     elif user_input==5:
+        registerClass(member)
+     elif user_input==6:
+        deleteClass(member)
+     elif user_input==7:
+         rescheduleClass(member)
 
-dashboard()
 def loginStaff():
     staffUser = input("Enter STAFF username: ")
     staffPass = input("Enter STAFF password: ")
@@ -416,7 +464,6 @@ def overseeBillings():
     print("\nPayments\n")
     for payment in payments:
         print(payment)
-
 
 
 def monitor_equipment_maintenance():
@@ -525,4 +572,16 @@ def staffManagment():
             lookup_member()
      else:
          print("Enter a correct option")
-#staffManagment()
+         
+pick=input("Are you a newcomer, member, trainer or staff?\n")
+if(pick=="newcomer"):
+    register_member()
+elif(pick=="member"):
+    dashboard()
+elif (pick == "trainer"):
+    scheduleTrainer()
+elif (pick == "staff"):
+    staffManagment()
+else:
+    print("Enter a correct option")
+    
